@@ -1,0 +1,57 @@
+seed_list: [0, 1, 2]
+device: "cuda"   # "cpu" or "cuda"
+num_workers: 4
+
+data:
+  derm7pt:
+    root_dir: "./data/derm7pt"
+    csv_train: "./data/derm7pt/train.csv"
+    csv_val: "./data/derm7pt/val.csv"
+    csv_test: "./data/derm7pt/test.csv"
+    img_col: "image_path"
+    label_col: "label"
+    meta_cols: ["age", "sex", "history"]  # adapt to your CSV
+    num_classes: 7
+
+  pad_ufes_20:
+    root_dir: "./data/pad_ufes_20"
+    csv_train: "./data/pad_ufes_20/train.csv"
+    csv_val: "./data/pad_ufes_20/val.csv"
+    csv_test: "./data/pad_ufes_20/test.csv"
+    img_col: "image_path"
+    label_col: "label"
+    meta_cols: ["age", "sex", "region"]   # adapt to your CSV
+    num_classes: 6
+
+model:
+  img_size: 224
+  patch_size: 16
+  embed_dim: 768
+  depth: 12
+  num_heads: 12
+  mlp_ratio: 4.0
+  drop_rate: 0.0
+  attn_drop_rate: 0.0
+  token_drop_prob: 0.1
+  meta_dim: 64
+  meta_token: true
+  pool: "cls"
+
+train:
+  batch_size: 16
+  epochs: 100
+  lr: 1.0e-4
+  weight_decay: 1.0e-5
+  early_stop_patience: 10
+  class_balance: true
+  meta_mask_prob: 0.2
+  resize_augment: true
+  resize_scales: [1.0, 0.75, 0.5]
+
+eval:
+  resolution_scales: [1.0, 0.75, 0.5, 0.25]
+  meta_levels: [1.0, 0.75, 0.5, 0.0]
+  metrics: ["accuracy", "auroc", "auprc", "f1_macro"]
+
+outputs:
+  out_dir: "./runs"
